@@ -58,7 +58,11 @@ namespace Zordon {
                 if (cv != v) {
                     Console.WriteLine("New Version Available");
                     Console.ReadKey();
-                    System.Diagnostics.Process.Start("https://github.com/PlasticJustice/Zordon/releases/latest");
+                    var ps = new System.Diagnostics.ProcessStartInfo("https://www.github.com/PlasticJustice/Zordon/releases/latest") {                
+                        UseShellExecute = true,              
+                        Verb = "open"
+                    };
+                    System.Diagnostics.Process.Start(ps);
                     Environment.Exit(0);
                 }
         }
