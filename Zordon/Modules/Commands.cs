@@ -48,7 +48,7 @@ namespace Zordon.Modules {
         public async Task Dog() {
             var sb = new StringBuilder();
             sb.AppendLine("Somebody deserved this");
-            sb.AppendLine("");
+            sb.AppendLine("https://cdn.discordapp.com/attachments/434468293211062294/804915049830678528/image0.gif");
             await ReplyAsync(sb.ToString());
         }
 
