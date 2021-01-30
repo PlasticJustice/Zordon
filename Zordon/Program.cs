@@ -40,7 +40,7 @@ namespace Zordon {
                 services.GetRequiredService<CommandService>().Log += LogAsync;
 
                 //This is where we get the Token value from the configuration file
-                await _client.LoginAsync(TokenType.Bot, _config["Token"]); // "ODA0NzY3OTU1NzUyODQ1NDAz.YBRIkA.DEaiBc6sEfj05AX5X9-5ouSHQUY");
+                await _client.LoginAsync(TokenType.Bot, _config["Token"]);
                 await _client.StartAsync();
 
                 // we get the CommandHandler class here and call the InitializeAsync method to start things up for the CommandHandler service
