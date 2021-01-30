@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using Discord;
 using Discord.Net;
 using Discord.Commands;
@@ -8,13 +9,17 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Zordon.Services;
+using Microsoft.VisualBasic;
 
 namespace Zordon {
     class Program {
         private DiscordSocketClient _client;
         private readonly IConfiguration _config;
+        public static string TempPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Temp"; //Path to Temp
+        public static string apppath = System.Reflection.Assembly.GetExecutingAssembly().Location; //Path to .exe directory
 
         static void Main(string[] args) {
+            UpdateCheck();
             new Program().MainAsync().GetAwaiter().GetResult();
         }
 
@@ -24,6 +29,40 @@ namespace Zordon {
                 .SetBasePath(AppContext.BaseDirectory)
                 .AddJsonFile(path: "config.json");
             _config = _builder.Build();
+        }
+
+        public static void UpdateCheck() {
+            if (File.Exists(TempPath + @"\vsn.txt")) { File.Delete(TempPath + @"\vsn.txt"); }
+            if (File.Exists(TempPath + @"\dt.txt")) { File.Delete(TempPath + @"\dt.txt"); }
+#if DEBUG
+            File.WriteAllText(apppath + @"..\..\..\..\..\version.txt", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version!.ToString());
+            if (System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable()) {
+                System.Net.WebClient Client = new System.Net.WebClient();
+                Client.DownloadFile("https://raw.githubusercontent.com/PlasticJustice/Zordon/master/Zordon/version.txt", TempPath + @"\vsn.txt");
+                string v;
+                using (System.IO.StreamReader vReader = new System.IO.StreamReader(TempPath + @"\vsn.txt")) {v = vReader.ReadToEnd();}
+                File.Delete(TempPath + @"\vsn.txt");
+        }
+#else
+            string cv = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version!.ToString();
+            if (System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable()) {
+                try {
+                    System.Net.WebClient Client = new System.Net.WebClient();
+                    Client.DownloadFile("https://raw.githubusercontent.com/PlasticJustice/Zordon/master/Zordon/version.txt", TempPath + @"\vsn.txt");
+                } catch {
+                    File.WriteAllText(TempPath + @"\vsn.txt", " ");
+                }
+                string v;
+                using (System.IO.StreamReader vReader = new System.IO.StreamReader(TempPath + @"\vsn.txt")) { v = vReader.ReadToEnd(); }
+                File.Delete(TempPath + @"\dt.txt");
+                if (cv != v) {
+                    Console.WriteLine("New Version Available");
+                    Console.ReadKey();
+                    System.Diagnostics.Process.Start("https://github.com/PlasticJustice/Zordon/releases/latest");
+                    Environment.Exit(0);
+                }
+        }
+#endif
         }
 
         public async Task MainAsync() {
@@ -51,7 +90,7 @@ namespace Zordon {
             }
         }
 
-            private Task LogAsync(LogMessage log) {
+    private Task LogAsync(LogMessage log) {
                 Console.WriteLine(log.ToString());
                 return Task.CompletedTask;
             }
