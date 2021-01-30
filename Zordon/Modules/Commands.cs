@@ -44,6 +44,14 @@ namespace Zordon.Modules {
             await ReplyAsync(null, false, embed.Build());
         }
 
+        [Command("dog")]
+        public async Task Dog() {
+            var sb = new StringBuilder();
+            sb.AppendLine("Somebody deserved this");
+            sb.AppendLine("");
+            await ReplyAsync(sb.ToString());
+        }
+
         [Command("role-rename")]
         [RequireUserPermission(GuildPermission.ManageRoles)]
         public async Task RoleRename(SocketRole role, [Remainder] string newname) {
