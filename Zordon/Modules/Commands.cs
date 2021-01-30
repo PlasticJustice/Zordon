@@ -52,6 +52,13 @@ namespace Zordon.Modules {
             await ReplyAsync(sb.ToString());
         }
 
+        [Command("sleep")]
+        public async Task Sleep() {
+            var sb = new StringBuilder();
+            sb.AppendLine("https://cdn.discordapp.com/attachments/523358648022597652/658475677934157874/BedOclock.jpg");
+            await ReplyAsync(sb.ToString());
+        }
+
         [Command("role-rename")]
         [RequireUserPermission(GuildPermission.ManageRoles)]
         public async Task RoleRename(SocketRole role, [Remainder] string newname) {
