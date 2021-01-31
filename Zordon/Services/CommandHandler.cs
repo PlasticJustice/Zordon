@@ -59,7 +59,7 @@ namespace Zordon.Services {
                 }              
             }
             if (message.Content.Contains("ducking")) {
-                message.ReplyAsync("https://cdn.discordapp.com/attachments/434468293211062294/805177452305186836/ducking.jpg");
+                await message.ReplyAsync("https://cdn.discordapp.com/attachments/434468293211062294/805177452305186836/ducking.jpg");
                 return;
             }
 

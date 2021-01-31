@@ -59,16 +59,77 @@ namespace Zordon.Modules {
             await ReplyAsync(sb.ToString());
         }
 
+        [Command("shrug")]
+        public async Task Shrug() {
+            var sb = new StringBuilder();
+            sb.AppendLine(@"¯\_(ツ)_/¯");
+            await ReplyAsync(sb.ToString());
+        }
+
+        [Command("tableflip")]
+        public async Task Tableflip() {
+            var sb = new StringBuilder();
+            Random gen = new Random();
+            byte i = (byte)gen.Next(1, 4);
+            switch (i) {
+                case 1:
+                    sb.AppendLine(@"(╯°□°）╯︵ ┻━┻");
+                    break;
+                case 2:
+                    sb.AppendLine(@"(ノಠ益ಠ)ノ彡┻━┻");
+                    break;
+                case 3:
+                    sb.AppendLine(@"┻━┻︵ヽ(`Д´)ﾉ︵ ┻━┻");
+                    break;
+            }           
+            await ReplyAsync(sb.ToString());
+        }
+
+        [Command("unflip")]
+        public async Task Unflip() {
+            var sb = new StringBuilder();
+            Random gen = new Random();
+            byte i = (byte)gen.Next(1, 3);
+            switch (i) {
+                case 1:
+                    sb.AppendLine(@"┬─┬ ノ( ゜-゜ノ)");
+                    break;
+                case 2:
+                    sb.AppendLine(@"┬──┬ ¯\_(ツ)");
+                    break;
+            }
+            await ReplyAsync(sb.ToString());
+        }
+
+        [Command("transflag")]
+        public async Task TransFlag() {
+            var sb = new StringBuilder();
+            sb.AppendLine(@"🏳️‍⚧️");
+            await ReplyAsync(sb.ToString());
+        }
+
+        [Command("yay")]
+        public async Task Yay() {
+            var sb = new StringBuilder();
+            sb.AppendLine("https://cdn.discordapp.com/attachments/434468293211062294/805262011272396800/yay.gif");
+            await ReplyAsync(sb.ToString());
+        }
+
         [Command("role-rename")]
         [RequireUserPermission(GuildPermission.ManageRoles)]
         public async Task RoleRename(SocketRole role, [Remainder] string newname) {
             var sb = new StringBuilder();
             var oldname = role.Name;
+            if (role.Members.Contains(Context.Message.Author)) { 
             var rolypoly = role.Guild.GetRole(role.Id);
             await rolypoly.ModifyAsync(x => {
                 x.Name = newname;
             });
             sb.AppendLine($"[{oldname}] renamed to [{newname}]!");
+            } else {
+                sb.AppendLine($"You are not a member of [{oldname}]!");
+            }
+            
             await ReplyAsync(sb.ToString());
         }
 
@@ -77,16 +138,16 @@ namespace Zordon.Modules {
         [RequireUserPermission(GuildPermission.ManageRoles)]
         public async Task RoleColour(SocketRole role, [Remainder] string colour) {
             var sb = new StringBuilder();
-            var rolypoly = role.Guild.GetRole(role.Id);
-            uint argb = UInt32.Parse(colour.Replace("#", ""), System.Globalization.NumberStyles.HexNumber);
-            //colour = colour.Replace("#", "");
-            //byte red = (Byte)Convert.ToUInt16(colour.Take(2).ToString(), 16);
-            //byte green = (Byte)Convert.ToUInt16(colour.Remove(0, 2).Take(2).ToString(), 16);
-            //byte blue = (Byte)Convert.ToUInt16(colour.Remove(0, 4).Take(2).ToString(), 16);
-            await rolypoly.ModifyAsync(x => {
-                x.Color = new Color(argb);
-            });
-            sb.AppendLine($"[{role.Name}] coloured to [{colour}]!");
+            if (role.Members.Contains(Context.Message.Author)) {
+                var rolypoly = role.Guild.GetRole(role.Id);
+                uint argb = UInt32.Parse(colour.Replace("#", ""), System.Globalization.NumberStyles.HexNumber);
+                await rolypoly.ModifyAsync(x => {
+                    x.Color = new Color(argb);
+                });
+                sb.AppendLine($"[{role.Name}] coloured to [{colour}]!");
+            } else {
+                sb.AppendLine($"You are not a member of [{role.Name}]!");
+            }
             await ReplyAsync(sb.ToString());
         }
 
