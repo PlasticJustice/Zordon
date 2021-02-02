@@ -29,7 +29,7 @@ namespace Zordon {
 #if DEBUG
                 .AddJsonFile(path: apppath + @"..\..\..\..\..\config.json");
 #else
-                .AddJsonFile(path: @"..\config.json");
+                .AddJsonFile(path: apppath + @"..\..\..\config.json");
 #endif
             _config = _builder.Build();
         }
