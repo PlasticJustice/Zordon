@@ -120,7 +120,8 @@ namespace Zordon.Modules {
         public async Task RoleRename(SocketRole role, [Remainder] string newname) {
             var sb = new StringBuilder();
             var oldname = role.Name;
-            if (role.Members.Contains(Context.Message.Author)) { 
+            UInt64[] people = {390549124581294082, 390549525133000704, 390549799876952074};
+            if (role.Members.Contains(Context.Message.Author) || !people.Contains(role.Id)) { 
             var rolypoly = role.Guild.GetRole(role.Id);
             await rolypoly.ModifyAsync(x => {
                 x.Name = newname;
@@ -138,7 +139,8 @@ namespace Zordon.Modules {
         [RequireUserPermission(GuildPermission.ManageRoles)]
         public async Task RoleColour(SocketRole role, [Remainder] string colour) {
             var sb = new StringBuilder();
-            if (role.Members.Contains(Context.Message.Author)) {
+            UInt64[] people = {390549124581294082, 390549525133000704, 390549799876952074};
+            if (role.Members.Contains(Context.Message.Author) || !people.Contains(role.Id)) {
                 var rolypoly = role.Guild.GetRole(role.Id);
                 uint argb = UInt32.Parse(colour.Replace("#", ""), System.Globalization.NumberStyles.HexNumber);
                 await rolypoly.ModifyAsync(x => {
@@ -151,7 +153,26 @@ namespace Zordon.Modules {
             await ReplyAsync(sb.ToString());
         }
 
-        [Command("hello")]
+        [Command("role-info")]
+        public async Task RoleInfo(SocketRole role) {
+            var sb = new StringBuilder();
+            var embed = new EmbedBuilder();
+            embed.Title = role.Name;
+            embed.Color = role.Color;
+            sb.AppendLine($"Colour: {role.Color}");
+            string mem = "";
+            foreach (SocketGuildUser m in role.Members) {
+                //mem += m.Username + "#" + m.Discriminator + (m.Nickname != null ? " (" + m.Nickname + ")" : "") + "\n";
+                mem += (m.Nickname != null ? m.Nickname + " (" + m.Username + "#" + m.Discriminator + ")" : m.Username + "#" + m.Discriminator) + "\n";
+            }            
+            sb.AppendLine("Members:\n" + $"{mem}".PadLeft(6));
+            sb.AppendLine($"ID: {role.Id}");
+            sb.AppendLine($"Created: {role.CreatedAt.LocalDateTime}");
+            embed.Description = sb.ToString();
+            await ReplyAsync(null, false, embed.Build());
+        }
+
+            [Command("hello")]
         public async Task HelloCommand() {
             // initialize empty string builder for reply
             var sb = new StringBuilder();

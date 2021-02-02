@@ -9,7 +9,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Zordon.Services;
-using Microsoft.VisualBasic;
 
 namespace Zordon {
     class Program {
@@ -27,7 +26,11 @@ namespace Zordon {
             //Create the configuration
             var _builder = new ConfigurationBuilder()
                 .SetBasePath(AppContext.BaseDirectory)
-                .AddJsonFile(path: "config.json");
+#if DEBUG
+                .AddJsonFile(path: apppath + @"..\..\..\..\..\config.json");
+#else
+                .AddJsonFile(path: @"..\config.json");
+#endif
             _config = _builder.Build();
         }
 

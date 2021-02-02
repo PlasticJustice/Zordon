@@ -52,14 +52,15 @@ namespace Zordon.Services {
             // get prefix from the configuration file
             char prefix = Char.Parse(_config["Prefix"]);
 
-            if (!(message.Content.Contains("ducking"))) {
+            if (!(message.Content.Contains("ducking", StringComparison.OrdinalIgnoreCase))) {
                 // determine if the message has a valid prefix, and adjust argPos based on prefix
                 if (!(message.HasMentionPrefix(_client.CurrentUser, ref argPos) || message.HasCharPrefix(prefix, ref argPos))) {
                     return;
                 }              
             }
-            if (message.Content.Contains("ducking")) {
+            if (message.Content.Contains("ducking", StringComparison.OrdinalIgnoreCase)) {
                 await message.ReplyAsync("https://cdn.discordapp.com/attachments/434468293211062294/805177452305186836/ducking.jpg");
+                await message.AddReactionAsync(new Emoji("\uD83D\uDC25"));
                 return;
             }
 
